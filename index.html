@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wondershare Creator Savings Planner</title>
+  <meta name="description" content="A free interactive Wondershare savings planner for creators comparing monthly, annual, and bundle-style software costs." />
+  <style>
+    :root{
+      --bg:#0f172a; --card:#1e293b; --line:#334155;
+      --text:#f1f5f9; --muted:#94a3b8; --accent:#22d3ee; --accent-2:#16a34a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -10%,#1b2740,transparent),var(--bg);
+      color:var(--text); display:flex; flex-direction:column; align-items:center; padding:24px;
+    }
+    h1{font-size:clamp(24px,5vw,38px); margin:32px 0 4px; text-align:center}
+    .sub{color:var(--muted); margin:0 0 28px; text-align:center; max-width:620px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:16px;
+      padding:28px; width:100%; max-width:460px;
+      box-shadow:0 20px 40px rgba(0,0,0,.35);
+    }
+    label{display:block; color:var(--muted); font-size:13px; margin:14px 0 6px}
+    input,select{
+      width:100%; padding:13px 14px; border-radius:10px; border:1px solid var(--line);
+      background:#0f1a2e; color:var(--text); font-size:15px;
+    }
+    .stats{display:flex; gap:12px; margin:22px 0}
+    .stat{flex:1; background:#0f1a2e; border:1px solid var(--line); border-radius:12px; padding:16px 10px; text-align:center}
+    .stat .label{font-size:13px; color:var(--muted); margin-bottom:6px}
+    .stat .value{font-size:24px; font-weight:700}
+    button{
+      width:100%; padding:14px 20px; border:none; border-radius:10px; cursor:pointer;
+      font-size:16px; font-weight:700; color:#04210f; background:var(--accent-2);
+      transition:transform .05s ease, background .2s ease;
+    }
+    button:hover{background:#15803d}
+    button:active{transform:translateY(1px)}
+    .reset{margin-top:10px; background:transparent; color:var(--muted); font-weight:500; font-size:13px}
+    .reset:hover{background:transparent; color:var(--text)}
+    .cta{
+      display:block; margin:18px auto 0; max-width:460px; text-decoration:none;
+      background:var(--accent); color:#0b0b0b; font-weight:700; text-align:center;
+      padding:14px 18px; border-radius:10px;
+    }
+    .cta:hover{filter:brightness(1.05)}
+    footer{color:var(--muted); font-size:12px; margin-top:28px; max-width:620px; text-align:center}
+  </style>
+</head>
+<body>
+  <h1>🎬 Wondershare Creator Savings Planner</h1>
+  <p class="sub">Compare a monthly editing budget with Wondershare annual-style plans. Your estimate is saved in your browser.</p>
+
+  <div class="card">
+    <label for="monthly">Your current monthly software spend</label>
+    <input id="monthly" type="number" min="0" step="0.01" value="19.99" />
+
+    <label for="plan">Wondershare plan to compare</label>
+    <select id="plan">
+      <option value="49.99">Basic Annual - $49.99/yr</option>
+      <option value="59.99">Advanced Annual - $59.99/yr</option>
+      <option value="99.99">Premium Annual - $99.99/yr</option>
+      <option value="79.99">Perpetual - $79.99 one-time</option>
+    </select>
+
+    <div class="stats">
+      <div class="stat"><div class="label">Estimated yearly spend</div><div class="value" id="current">$0</div></div>
+      <div class="stat"><div class="label">Estimated savings</div><div class="value" id="savings">$0</div></div>
+    </div>
+
+    <button id="saveBtn">Save My Estimate</button>
+    <button class="reset" id="resetBtn">Reset planner</button>
+  </div>
+
+  <a class="cta" href="https://www.awin1.com/cread.php?awinmid=88453&awinaffid=416607" target="_blank" rel="noopener sponsored">
+    🎁 Get Wondershare: Up to 60% OFF →
+  </a>
+
+  <footer>
+    Built for creators comparing Wondershare plans. This page contains an affiliate link — we may earn a commission at no extra cost to you. Not affiliated with or endorsed by Wondershare.
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const read = (key, fallback) => localStorage.getItem(key) || fallback;
+
+    $("monthly").value = read("ws_monthly", "19.99");
+    $("plan").value = read("ws_plan", "49.99");
+
+    function money(n){
+      return "$" + Number(n).toFixed(2);
+    }
+
+    function render(){
+      const monthly = parseFloat($("monthly").value || "0");
+      const plan = parseFloat($("plan").value || "0");
+      const yearly = monthly * 12;
+      const savings = Math.max(0, yearly - plan);
+      $("current").innerText = money(yearly);
+      $("savings").innerText = money(savings);
+    }
+
+    function saveEstimate(){
+      localStorage.setItem("ws_monthly", $("monthly").value);
+      localStorage.setItem("ws_plan", $("plan").value);
+      render();
+    }
+
+    function resetPlanner(){
+      localStorage.removeItem("ws_monthly");
+      localStorage.removeItem("ws_plan");
+      $("monthly").value = "19.99";
+      $("plan").value = "49.99";
+      render();
+    }
+
+    $("monthly").addEventListener("input", render);
+    $("plan").addEventListener("change", render);
+    $("saveBtn").addEventListener("click", saveEstimate);
+    $("resetBtn").addEventListener("click", resetPlanner);
+    render();
+  </script>
+</body>
+</html>
